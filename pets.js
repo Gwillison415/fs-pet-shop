@@ -4,17 +4,22 @@ const petsPath = path.join(__dirname, 'pets.json');
 var node = path.basename(process.argv[0]);
 var file = path.basename(process.argv[1]);
 var cmd = process.argv[2];
-console.log('Usage: node pets.js [read | create | update | destroy]');
+//console.log('Usage: node pets.js [read | create | update | destroy]');
 
 if (cmd === 'read') {
   fs.readFile(petsPath, 'utf8', function(err, data) {
     if (err) {
       throw err;
     }
-    var pet = Number.parseInt(process.argv[3]);
+    let pet = Number.parseInt(process.argv[3]);
     var pets = JSON.parse(data);
-    if (Number.isNaN(pet)) {
-      console.log(pets[pet]);
+  
+    if (Number.isNaN(pet) === false) {
+      if (pet < 0 || pet >= pets.length) {
+        console.log(`Usage: node pets.js read ${pet}`);
+      } else {
+        console.log(pets[pet]);
+      }
     } else {
       console.log(pets);
     }
@@ -25,10 +30,22 @@ if (cmd === 'read') {
     if (readErr) {
       throw readErr;
     }
-    pets = JSON.parse(data);
-    var pet = process.argv[3];
-    if (!pets) {
-      console.error(`Usage: ${node} ${file} ${cmd} GUEST`);
+    let pets = JSON.parse(data);
+    let pet = {};
+    var petName = process.argv[5];
+    var petSpecies = process.argv[4];
+    var age = Number.parseInt(process.argv[3]);
+    //console.log('etxt', ((petName) && (petSpecies)));
+    if (petName && petSpecies && age > 0) {
+      pet = {
+        'age': age,
+        'kind': petSpecies,
+        'name': petName,
+      };
+      // console.log(pet);
+
+    } else {
+      console.error(`Usage: ${node} ${file} ${cmd} AGE KIND NAME`);
       process.exit(1);
 
     }
@@ -40,10 +57,11 @@ if (cmd === 'read') {
         throw writeErr;
       }
       console.log(pet);
+
     });
   });
 }
 else {
-  console.error(`Usage: ${node} ${file} [read | create]`);
-  process.exit(1);
+  console.error(`Usage: ${node} ${file} [read | create | update | destroy]`);
+  process.exitCode = 1;
 }
