@@ -23,19 +23,22 @@ app.get('/pets/:id', (req, res) => {
 
 app.get('/pets', (req, res) =>{
   petClassFunctions.query().then((resolvedData) => {
-    // console.log('resolved data', resolvedData);
     res.send(resolvedData);
   })
   .catch(err => res.sendStatus(500));
 })
-
+// look at get pets/;id test and see where 404 sends me
 app.post('/pets', (req, res) =>{
   let newPet = req.body;
   newPet = petClassFunctions.create(newPet);
   if (!newPet) {
+    // console.log('stringssss');
     res.sendStatus(400);
   } else {
-    res.status(200).send(newPet);
+
+    // res.status(200).send(newPet);
+
+    res.send(newPet)
   }
 });
 
@@ -54,6 +57,7 @@ app.delete('/pets/:id', (req, res) =>{
 app.patch('/pets/:id', (req, res) =>{
   const id = req.params.id;
   const changesToMake = req.body;
+  console.log('id', id, 'changes', changesToMake);
   const petToUpdate = petClassFunctions.update(id, changesToMake);
   if (!petToUpdate) {
     res.sendStatus(404);

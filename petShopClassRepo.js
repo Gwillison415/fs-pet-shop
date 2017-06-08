@@ -36,22 +36,29 @@ class PetFn {
 
   get(id){
     const petsByID = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
-    console.log(petsByID);
+    // console.log(petsByID);
+
     return petsByID[id];
   }
 
   create(newPet) {
     if(!newPet.kind || !newPet.name || isNaN(newPet.age)) {return;}
-    var newID = generateNextID();
-    newPet = Object.assign({}, newPet, {newID});
-    petsByID[newID] = newPet;
+    // var newID = generateNextID();
+    const pets = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
+    // console.log(petsByID);
+    // newPet = Object.assign({}, newPet, newID);
+    pets.push(newPet);
+    fs.writeFileSync('./pets.json', JSON.stringify(pets), 'utf-8');
     return newPet;
   }
   remove(id){
+    const petsByID = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
     if (!petsByID[id]) {
       return false;
     } else {
-      return delete petsByID[id];
+      delete petsByID[id];
+      fs.writeFileSync('./pets.json', JSON.stringify(petsByID), 'utf-8');
+      console.log(petsByID);
     }
   }
   update(id, changesObj) {
@@ -59,8 +66,23 @@ class PetFn {
     if (!id || changesObj.id) {
       return;
     }
-    let targetPet = petsByID[id];
-    targetPet = Object.assign({}, targetPet, changesObj);
+    const pets = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
+    var targetPet;
+    if (changesObj.kind && changesObj.age && changesObj.name) {
+      targetPet = changesObj;
+      pets[id] = targetPet;
+
+    } else {
+      targetPet = pets[id];
+      Object.keys(changesObj).forEach( key => targetPet[key] = changesObj[key])
+      pets[id] = targetPet;
+      console.log('else', targetPet);
+    }
+
+    // console.log('targetPet', targetPet);
+
+    fs.writeFileSync('./pets.json', JSON.stringify(pets), 'utf-8');
+    // var targetPet = Object.assign({}, targetPet, changesObj);
     return targetPet;
   }
 
