@@ -4,8 +4,6 @@
 let countr = 1;
 const fs = require('fs');
 
-// will be a string and likely need an obj to manipulate
-// console.log(petsByID);
 function generateNextID() {
   return countr++;
 
@@ -36,8 +34,6 @@ class PetFn {
 
   get(id){
     const petsByID = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
-    // console.log(petsByID);
-
     return petsByID[id];
   }
 

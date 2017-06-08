@@ -32,12 +32,8 @@ app.post('/pets', (req, res) =>{
   let newPet = req.body;
   newPet = petClassFunctions.create(newPet);
   if (!newPet) {
-    // console.log('stringssss');
     res.sendStatus(400);
   } else {
-
-    // res.status(200).send(newPet);
-
     res.send(newPet)
   }
 });
@@ -46,12 +42,9 @@ app.post('/pets', (req, res) =>{
 app.delete('/pets/:id', (req, res) =>{
   const id = req.params.id;
   const petToDelete = petClassFunctions.remove(id);
-  console.log(petToDelete);
   if (!petToDelete) {
-    console.log('fail status sent');
     res.sendStatus(404);
   } else {
-    console.log('success status sent');
     res.send(petToDelete);
   }
 
@@ -60,7 +53,6 @@ app.delete('/pets/:id', (req, res) =>{
 app.patch('/pets/:id', (req, res) =>{
   const id = req.params.id;
   const changesToMake = req.body;
-  // console.log('id', id, 'changes', changesToMake);
   const petToUpdate = petClassFunctions.update(id, changesToMake);
   if (!petToUpdate) {
     res.sendStatus(404);
