@@ -52,14 +52,18 @@ class PetFn {
     return newPet;
   }
   remove(id){
-    const petsByID = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
-    if (!petsByID[id]) {
+    const pets = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
+    if (!pets[id]) {
+      console.log('should be false');
       return false;
     } else {
-      delete petsByID[id];
-      fs.writeFileSync('./pets.json', JSON.stringify(petsByID), 'utf-8');
-      console.log(petsByID);
+      var deletedPet = pets[id];
+      console.log('PET TRIGGERED FOR DELETION','id deleted=', pets[id], 'pets before delete', pets);
+      delete pets[id];
+      fs.writeFileSync('./pets.json', JSON.stringify(pets), 'utf-8');
+      console.log('pets after delete', pets);
     }
+    return deletedPet;
   }
   update(id, changesObj) {
     //including changesObj.id prevents the caller from attempting to change the ID. You should never allow changing the ID of an existing entity.
@@ -69,21 +73,16 @@ class PetFn {
     const pets = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
     var targetPet;
     if (changesObj.kind && changesObj.age && changesObj.name) {
-      targetPet = changesObj;
-      pets[id] = targetPet;
-
+      pets[id] = changesObj;
     } else {
-      targetPet = pets[id];
-      Object.keys(changesObj).forEach( key => targetPet[key] = changesObj[key])
-      pets[id] = targetPet;
-      console.log('else', targetPet);
+      Object.keys(changesObj).forEach( key => pets[id][key] = changesObj[key]);
     }
 
     // console.log('targetPet', targetPet);
 
     fs.writeFileSync('./pets.json', JSON.stringify(pets), 'utf-8');
     // var targetPet = Object.assign({}, targetPet, changesObj);
-    return targetPet;
+    return pets[id];
   }
 
 }
