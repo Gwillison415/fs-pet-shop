@@ -52,7 +52,7 @@ app.delete('/pets/:id', (req, res) =>{
     res.sendStatus(404);
   } else {
     console.log('success status sent');
-    res.sendStatus(200);
+    res.send(petToDelete);
   }
 
 });

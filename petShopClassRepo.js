@@ -43,10 +43,7 @@ class PetFn {
 
   create(newPet) {
     if(!newPet.kind || !newPet.name || isNaN(newPet.age)) {return;}
-    // var newID = generateNextID();
     const pets = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
-    // console.log(petsByID);
-    // newPet = Object.assign({}, newPet, newID);
     pets.push(newPet);
     fs.writeFileSync('./pets.json', JSON.stringify(pets), 'utf-8');
     return newPet;
@@ -54,16 +51,13 @@ class PetFn {
   remove(id){
     const pets = JSON.parse(fs.readFileSync('./pets.json', 'utf-8'));
     if (!pets[id]) {
-      console.log('should be false');
-      return false;
+      return;
     } else {
       var deletedPet = pets[id];
-      console.log('PET TRIGGERED FOR DELETION','id deleted=', pets[id], 'pets before delete', pets);
       delete pets[id];
       fs.writeFileSync('./pets.json', JSON.stringify(pets), 'utf-8');
-      console.log('pets after delete', pets);
+      return deletedPet;
     }
-    return deletedPet;
   }
   update(id, changesObj) {
     //including changesObj.id prevents the caller from attempting to change the ID. You should never allow changing the ID of an existing entity.
@@ -78,10 +72,8 @@ class PetFn {
       Object.keys(changesObj).forEach( key => pets[id][key] = changesObj[key]);
     }
 
-    // console.log('targetPet', targetPet);
-
     fs.writeFileSync('./pets.json', JSON.stringify(pets), 'utf-8');
-    // var targetPet = Object.assign({}, targetPet, changesObj);
+    // var targetPet = Object.assign({}, targetPet, changesObj);  --- another method for object creation from a previous obj
     return pets[id];
   }
 
